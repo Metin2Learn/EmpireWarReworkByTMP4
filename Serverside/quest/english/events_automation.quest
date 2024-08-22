@@ -1,0 +1,79 @@
+-----------------------------------
+-- Empire War Automation By TMP4 --
+-----------------------------------
+quest events_automation begin
+	state start begin
+		--Péntek 20 óra birodalmi war event
+		function is_start_war_event()
+			if game.get_event_flag("war_opened") == 0 then
+				local currentHour = tonumber(os.date("%H"))
+				local currentMinute = tonumber(os.date("%M"))
+				local currentDayName = os.date("%A") -- Monday - Tuesday - Wednesday - Thursday - Friday - Saturday - Sunday
+				if currentDayName == "Friday" and currentHour == 20 and currentMinute <= 10 then
+					return true
+				else
+					return false
+				end
+			else
+				return false
+			end
+		end
+		function start_war_event()
+			if game.get_event_flag("war_opened") == 0 then
+				game.set_event_flag("war_opened", 1)
+				server_timer("war_close", 3600)
+				--from event_war.quest
+				game.set_event_flag("birodalmi_war", 1) -- Birodalmi war fõ kapcsoló
+				game.set_event_flag("birodalmi_war_win", 0) -- Nyertes birodalom
+				game.set_event_flag("birodalmi_war_los", 1) -- Bent maradhatnak-e a vesztesek
+				game.set_event_flag("birodalmi_war_lvl", 75) -- Minimum szint
+				game.set_event_flag("birodalmi_war_max", 50) -- Max résztvevõ / birodalom
+				game.set_event_flag("birodalmi_war_a_n", 0) -- Piros résztvevõk
+				game.set_event_flag("birodalmi_war_b_n", 0) -- Sárga résztvevõk
+				game.set_event_flag("birodalmi_war_c_n", 0) -- Kék résztvevõk
+				game.set_event_flag("birodalmi_war_kill", 50) -- Szükséges kill a nyeréshez
+				game.set_event_flag("birodalmi_war_shin", 0) -- Piros kill számláló
+				game.set_event_flag("birodalmi_war_chun", 0) -- Sárga kill számláló
+				game.set_event_flag("birodalmi_war_jinn", 0) -- Kék kill számláló
+				notice_all("~*~*The Empire War has started!*~*~")
+				notice_all("Speak with Battle bailiff to join!")
+				notice_all("Minimum level to join: 75")
+				notice_all("Maximum attender / empire: 50")
+				notice_all("Required kill / empire to win: 50")
+				notice_all("The looser empires can stay for the reward.")
+			end
+		end
+		when login begin
+			if events_automation.is_start_war_event() then
+				events_automation.start_war_event()
+			else
+				loop_timer("check_events_war", 60)
+			end
+		end
+		when check_events_war.timer begin
+			if events_automation.is_start_war_event() then
+				events_automation.start_war_event()
+			end
+		end
+		when war_close.server_timer begin
+			game.set_event_flag("war_opened", 0)
+		end
+		when 9012.chat."Automation: Fix event flags" with pc.is_gm() and pc.get_map_index() == 201 begin -- only needed when you not wait for the war_close.server_timer
+			say_title("Fix event flags:")
+			say("")
+			say_reward("Reset event flag and timer?")
+			say("")
+			local sx = select("Igen","Nem")
+			if sx == 2 then
+				return
+			else
+				say_title("Fix event flags:")
+				say("")
+				say_reward("Event flag and timer reseted.")
+				say("")
+				clear_server_timer("war_close")
+				game.set_event_flag("war_opened", 0)
+			end
+		end
+	end
+end

@@ -1,0 +1,410 @@
+------------------------
+-- Empire War By TMP4 --
+------------------------
+quest event_war begin
+	state start begin
+		function war_settings()
+			return
+			{
+				["a_cords"]={["x"] = 1342700, ["y"]= 33800,},
+				["b_cords"] = { ["x"] = 1393000, ["y"] = 33900, },
+				["c_cords"] = { ["x"] = 1368000, ["y"] = 66300,},
+				["gm_cords"] = { ["x"] = 1367600, ["y"] = 38200, },
+				["war_map_index"] = 201
+			}
+		end
+		function war_start(war_state, looser_reward, min_level, max_attender, required_kill)
+			game.set_event_flag("birodalmi_war", war_state) -- Birodalmi war fõ kapcsoló
+			game.set_event_flag("birodalmi_war_win", 0) -- Nyertes birodalom
+			game.set_event_flag("birodalmi_war_los", looser_reward) -- Bent maradhatnak-e a vesztesek
+			game.set_event_flag("birodalmi_war_lvl", min_level) -- Minimum szint
+			game.set_event_flag("birodalmi_war_max", max_attender) -- Max résztvevõ / birodalom
+			game.set_event_flag("birodalmi_war_a_n", 0) -- Piros résztvevõk
+			game.set_event_flag("birodalmi_war_b_n", 0) -- Sárga résztvevõk
+			game.set_event_flag("birodalmi_war_c_n", 0) -- Kék résztvevõk
+			game.set_event_flag("birodalmi_war_kill", required_kill) -- Szükséges kill a nyeréshez
+			game.set_event_flag("birodalmi_war_shin", 0) -- Piros kill számláló
+			game.set_event_flag("birodalmi_war_chun", 0) -- Sárga kill számláló
+			game.set_event_flag("birodalmi_war_jinn", 0) -- Kék kill számláló
+		end
+		
+		function war_winner()
+			return game.get_event_flag("birodalmi_war_win")
+		end
+		function war_set_winner(empireNum)
+			game.set_event_flag("birodalmi_war_win", empireNum)
+		end
+		function war_min_level()
+			return game.get_event_flag("birodalmi_war_lvl")
+		end
+		function is_war_running()
+			if game.get_event_flag("birodalmi_war") > 0 then
+				return true
+			else
+				return false
+			end
+		end
+		function is_looser_reward()
+			if game.get_event_flag("birodalmi_war_los") > 0 then
+				return true
+			else
+				return false
+			end
+		end
+		function war_max_attender()
+			return game.get_event_flag("birodalmi_war_max")
+		end
+		function war_red_attender()
+			return game.get_event_flag("birodalmi_war_a_n")
+		end
+		function war_yellow_attender()
+			return game.get_event_flag("birodalmi_war_b_n")
+		end
+		function war_blue_attender()
+			return game.get_event_flag("birodalmi_war_c_n")
+		end
+		function war_set_attender(empireNum)
+			if empireNum == 1 then
+				game.set_event_flag("birodalmi_war_a_n", event_war.war_red_attender() + 1)
+			elseif empireNum == 2 then
+				game.set_event_flag("birodalmi_war_b_n", event_war.war_yellow_attender() + 1)
+			else
+				game.set_event_flag("birodalmi_war_c_n", event_war.war_blue_attender() + 1)
+			end
+		end
+		function war_required_kill()
+			return game.get_event_flag("birodalmi_war_kill")
+		end
+		function war_red_kill()
+			return game.get_event_flag("birodalmi_war_shin")
+		end
+		function war_yellow_kill()
+			return game.get_event_flag("birodalmi_war_chun")
+		end
+		function war_blue_kill()
+			return game.get_event_flag("birodalmi_war_jinn")
+		end
+		function war_set_kill(empireNum)
+			if empireNum == 1 then
+				game.set_event_flag("birodalmi_war_shin", event_war.war_red_kill() + 1)
+			elseif empireNum == 2 then
+				game.set_event_flag("birodalmi_war_chun", event_war.war_yellow_kill() + 1)
+			else
+				game.set_event_flag("birodalmi_war_jinn", event_war.war_blue_kill() + 1)
+			end
+		end
+		function war_current_kill(empireNum)
+			if empireNum == 1 then
+				return game.get_event_flag("birodalmi_war_shin")
+			elseif empireNum == 2 then
+				return game.get_event_flag("birodalmi_war_chun")
+			else
+				return game.get_event_flag("birodalmi_war_jinn")
+			end
+		end
+		function war_flags_nullaz()
+			game.set_event_flag("birodalmi_war", 0) -- Birodalmi war fõ kapcsoló
+			game.set_event_flag("birodalmi_war_win", 0) -- Nyertes birodalom
+			game.set_event_flag("birodalmi_war_los", 0) -- Bent maradhatnak-e a vesztesek
+			game.set_event_flag("birodalmi_war_lvl", 0) -- Minimum szint
+			game.set_event_flag("birodalmi_war_max", 0) -- Max résztvevõ / birodalom
+			game.set_event_flag("birodalmi_war_a_n", 0) -- Piros résztvevõk
+			game.set_event_flag("birodalmi_war_b_n", 0) -- Sárga résztvevõk
+			game.set_event_flag("birodalmi_war_c_n", 0) -- Kék résztvevõk
+			game.set_event_flag("birodalmi_war_kill", 0) -- Szükséges kill a nyeréshez
+			game.set_event_flag("birodalmi_war_shin", 0) -- Piros kill számláló
+			game.set_event_flag("birodalmi_war_chun", 0) -- Sárga kill számláló
+			game.set_event_flag("birodalmi_war_jinn", 0) -- Kék kill számlál
+		end
+		when letter begin
+			if pc.is_gm() then
+				send_letter("GM: Birodalmi háború ")
+			elseif pc.get_map_index() == event_war.war_settings().war_map_index and event_war.is_war_running() then
+				send_letter("Birodalmi háború ")
+			end
+		end
+		when button or info begin
+			if pc.is_gm() then
+				if not event_war.is_war_running() then
+					say_title("Birodalmi háború:")
+					say("")
+					say_reward("Jelenleg a Birodalmi háború ")
+					say_reward("inaktív, bekapcsoljam?")
+					say("")
+					local s1 = select ("Igen","Nem")
+					if s1 == 2 then
+						send_letter("GM: Birodalmi háború ")
+						return
+					else
+						say_title("Birodalmi háború:")
+						say("")
+						say_reward("Mennyi legyen a minimum szint?")
+						local minLvlToJoin = input()
+						if minLvlToJoin == "" or not tonumber(minLvlToJoin) then
+							minLvlToJoin = 75
+						end
+						say_title("Birodalmi háború:")
+						say("")
+						say_reward("Mennyi legyen birodalmanként")
+						say_reward("a maximum résztvevõ szám?")
+						local maxAttender = input()
+						if maxAttender == "" or not tonumber(maxAttender) or maxAttender == 0 then
+							maxAttender = 25
+						end
+						say_title("Birodalmi háború:")
+						say("")
+						say_reward("Mennyi legyen a szükséges")
+						say_reward("kill a nyeréshez?")
+						local requiredKill = input()
+						if requiredKill == "" or not tonumber(requiredKill) or requiredKill == 0 then
+							requiredKill = 25
+						end
+						say_title("Birodalmi háború:")
+						say("")
+						say_reward("A vesztes birodalmak is")
+						say_reward("bent maradhassanak a végén?")
+						say("")
+						local looserReward = 0
+						local s2 = select("Igen","Nem")
+						if s2 == 1 then looserReward = 1 end
+						if s2 == 2 then looserReward = 0 end
+						say_title("Birodalmi háború:")
+						say("")
+						say_reward("Minimum szint: "..minLvlToJoin)
+						say_reward("Max résztvevõ/birodalom: "..maxAttender)
+						say_reward("Szükséges kill a nyeréshez: "..requiredKill)
+						if looserReward == 1 then
+							say_reward("Vesztes jutalom: igen")
+						else
+							say_reward("Vesztes jutalom: nem")
+						end
+						say("")
+						say("Minden stimmel?")
+						say("")
+						local s2 = select("Igen, mehet az event", "Nem, újra próbálom")
+						if s2 == 2 then
+							send_letter("GM: Birodalmi háború ")
+							return
+						else
+							notice_all("~*~*A Birodalmi Háború elkezdõdött!*~*~")
+							notice_all("Beszélj a Csata irányítóval hogy részt vegyél rajta!")
+							notice_all("Minimum szint a jelentkezéshez: "..minLvlToJoin)
+							notice_all("Maximum résztvevõ / birodalom: "..maxAttender)
+							notice_all("Szükséges ölés / birodalom a nyeréshez: "..requiredKill)
+							if looserReward == 1 then
+								notice_all("A vesztes birodalmak is bent maradhatnak a jutalomra!")
+							end
+							event_war.war_start(1, looserReward, minLvlToJoin, maxAttender, requiredKill)
+						end
+						send_letter("GM: Birodalmi háború ")
+					end
+				else
+					local pont = event_war.war_required_kill()
+					local shin = event_war.war_red_kill()
+					local chun = event_war.war_yellow_kill()
+					local jinn = event_war.war_blue_kill()
+					say_title("Birodalmi háború:")
+					say("")
+					say("Szükséges pont: "..pont)
+					say("")
+					say_reward("Shinsoo: "..shin)
+					say_reward("Chunjo: "..chun)
+					say_reward("Jinno: "..jinn)
+					say("")
+					say("A háború aktív, leállítsam?")
+					say("")
+					local sx = select ("Igen","Nem")
+					if sx == 2 then
+						send_letter("GM: Birodalmi háború ")
+						return
+					else
+						event_war.war_flags_nullaz()
+						syschat("Birodalmi háború kikapcsolva.")
+					end
+					send_letter("GM: Birodalmi háború ")
+				end
+			elseif pc.get_map_index() == event_war.war_settings().war_map_index and event_war.is_war_running() then
+				local pont = event_war.war_required_kill()
+				local shin = event_war.war_red_kill()
+				local chun = event_war.war_yellow_kill()
+				local jinn = event_war.war_blue_kill()
+				say_title("Birodalmi háború:")
+				say("")
+				say("Szükséges pont: "..pont)
+				say("")
+				say_reward("Shinsoo: "..shin)
+				say_reward("Chunjo: "..chun)
+				say_reward("Jinno: "..jinn)
+				say("")
+				select(locale.confirm)
+				send_letter("Birodalmi háború ")
+			else
+				say_title("Birodalmi háború:")
+				say("")
+				say_reward("A birodalmi háború véget ért.")
+				say_reward("Szeretnél vissza menni a városba?")
+				say("")
+				local s = select("Igen","Nem")
+				if s == 2 then
+					send_letter("Birodalmi háború ")
+					return
+				else
+					warp_to_village()
+				end
+			end
+		end
+		when 11001.chat."Birodalmi háború " or 11003.chat."Birodalmi háború " or 11005.chat."Birodalmi háború " begin
+			if event_war.is_war_running() then
+				local minLvlToJoin = event_war.war_min_level()
+				if pc.get_level() < tonumber(minLvlToJoin) then
+					say_title(mob_name(npc.get_race())..":")
+					say("")
+					say_reward("Nincs meg a szükséges szinted!")
+					say_reward("Szükséges szint: "..minLvlToJoin)
+					say("")
+					return
+				else
+					say_title(mob_name(npc.get_race())..":")
+					say("")
+					say("Szeretnél csatlakozni a birdalmi")
+					say("háborúba és képviselni a birodalmad?")
+					say("")
+					local s = select("Igen", "Nem")
+					if s == 2 then
+						return
+					else
+						if pc.is_gm() then
+							pc.warp(event_war.war_settings().gm_cords.x,event_war.war_settings().gm_cords.y)
+						else
+							local playerEmpire = pc.get_empire()
+							local attenders = 0
+							if playerEmpire == 1 then
+								attenders = event_war.war_red_attender()
+							elseif playerEmpire == 2 then
+								attenders = event_war.war_yellow_attender()
+							else
+								attenders = event_war.war_blue_attender()
+							end
+							local maxAttenders = event_war.war_max_attender()
+							if tonumber(attenders) >= tonumber(maxAttenders) then
+								say_title(mob_name(npc.get_race())..":")
+								say("")
+								say("Sajnálom de maximum "..maxAttenders.." ember")
+								say("léphet be a birodalmadból, elkéstél.")
+								say("")
+								return
+							else
+								event_war.war_set_attender(playerEmpire)
+								if playerEmpire == 1 then
+									pc.warp(event_war.war_settings().a_cords.x,event_war.war_settings().a_cords.y)
+								elseif playerEmpire == 2 then
+									pc.warp(event_war.war_settings().b_cords.x,event_war.war_settings().b_cords.y)
+								else
+									pc.warp(event_war.war_settings().c_cords.x,event_war.war_settings().c_cords.y)
+								end
+							end
+						end
+					end
+				end
+			else
+				say_title(mob_name(npc.get_race())..":")
+				say("")
+				say("Jelenleg nincs folyamatban a birodalmi")
+				say("háború, kérlek nézz vissza késõbb!")
+				say("")
+				say_reward("A Birodalmi Háború minden")
+				say_reward("péntek 20:00-kor indul.")
+				say("")
+			end
+		end
+		when login with pc.get_map_index() == event_war.war_settings().war_map_index begin
+			if event_war.is_war_running() then
+				loop_timer("birodalmi_war_t", 3)
+				syschat("Képviseld a birodalmad és vegyél részt a csatában!")
+			else
+				if pc.is_gm() then
+					syschat("GM vagy, itt maradhatsz csatán kívül is.")
+				else
+					warp_to_village()
+				end
+			end
+		end
+		when birodalmi_war_t.timer begin
+			if event_war.is_war_running() then
+				if pc.gethp() < 0 and pc.getqf("birodalmi_war_last_port") <= get_time() then
+					pc.setqf("birodalmi_war_last_port", get_time() + 10)
+					timer("birodalmi_war_hp", 3) -- idõ adása hogy biztos számolja a kill-t
+				end
+			end
+			if event_war.war_winner() > 0 then
+				if event_war.war_winner() != pc.get_empire() and not pc.is_gm() then
+					syschat("Sajnos nem a te birodalmad nyert, teleportálás a városba...")
+					warp_to_village()
+				else
+					cleartimer("birodalmi_war_t")
+				end
+			end
+		end
+		when birodalmi_war_hp.timer begin
+			if event_war.is_war_running() then
+				local playerEmpire = pc.get_empire()
+				if playerEmpire == 1 then
+					pc.warp(event_war.war_settings().a_cords.x,event_war.war_settings().a_cords.y)
+				elseif playerEmpire == 2 then
+					pc.warp(event_war.war_settings().b_cords.x,event_war.war_settings().b_cords.y)
+				else
+					pc.warp(event_war.war_settings().c_cords.x,event_war.war_settings().c_cords.y)
+				end
+			end
+		end
+		when kill with npc.is_pc() and pc.get_map_index() == event_war.war_settings().war_map_index begin
+			if event_war.is_war_running() then
+				local playerEmpire = pc.get_empire()
+				if npc.get_empire() == playerEmpire then
+					syschat("Birodalmi csata: mivel akadályoztad a birodalmad, el lettél távolítva.")
+					warp_to_village()
+				else
+					event_war.war_set_kill(playerEmpire)
+					timer("birodalmi_war_check_win", 1) -- Azért kell egy kis késés timerrel mert az event flag állítást nem érzékeli azonnal...
+				end
+			else
+				-- Event végén ha esetleg valaki rosszalkodni akar, ki lesz portolva.
+				pc.setqf("not_allowed_kill", pc.getqf("not_allowed_kill") + 1)
+				if pc.getqf("not_allowed_kill") >= 2 then
+					pc.setqf("not_allowed_kill", 0)
+					syschat("Birodalmi csata: Ki leszel portolva, mert az event végén nem szabad embert ölni!")
+					warp_to_village()
+				elseif pc.getqf("not_allowed_kill") >= 1 then
+					syschat("Birodalmi csata: Még egy játékos leölése esetén el leszel távolítva!")
+				end
+			end
+		end
+		when birodalmi_war_check_win.timer begin
+			if event_war.is_war_running() then
+				local playerEmpire = pc.get_empire()
+				local requiredKill = event_war.war_required_kill()
+				local currentKill = event_war.war_current_kill(playerEmpire)
+				if tonumber(currentKill) >= tonumber(requiredKill) then
+					event_war.war_flags_nullaz()
+					kill_all_in_map(event_war.war_settings().war_map_index)
+					if playerEmpire == 1 then
+						notice_all("A birodalmi háborút a Shinsoo birodalom nyerte!")
+					elseif playerEmpire == 2 then
+						notice_all("A birodalmi háborút a Chunjo birodalom nyerte!")
+					else
+						notice_all("A birodalmi háborút a Jinno birodalom nyerte!")
+					end
+					if event_war.is_looser_reward() then
+						notice_all("A vesztes birodalmak is maradhatnak a jutalomért.")
+						event_war.war_set_winner(0)
+					else
+						event_war.war_set_winner(playerEmpire)
+					end
+					regen_in_map(event_war.war_settings().war_map_index, "data/dungeon/event_birodalmi_war.txt")
+				else
+					syschat("Birodalmad pontjainak állása: "..requiredKill.." / "..currentKill)
+				end
+			end
+		end
+	end
+end

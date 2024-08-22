@@ -1,0 +1,7 @@
+Eternexus can not extract-repack season1 because of non latin characters (Client will not load).
+That is nothing to do with this release.
+
+If you having hard time to extract-repack season1 then check my comment here:
+https://metin2.dev/topic/27610-40250-reference-serverfile-client-src-15-available-languages/page/11/?tab=comments#comment-144095
+
+If you are using other extractor what are capable to extract-repack non latin characters then you can ignore this notice.
