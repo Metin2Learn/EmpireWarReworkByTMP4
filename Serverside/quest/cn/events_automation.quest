@@ -1,0 +1,90 @@
+-----------------------------------
+-- 帝国战争自动化 By TMP4 --
+-----------------------------------
+quest events_automation begin
+	state start begin
+		-- 每周五晚上8点开始帝国战争事件
+		function is_start_war_event()
+			if game.get_event_flag("war_opened") == 0 then
+				local currentHour = tonumber(os.date("%H"))
+				local currentMinute = tonumber(os.date("%M"))
+				local currentDayName = os.date("%A") -- 周一 - 周二 - 周三 - 周四 - 周五 - 周六 - 周日
+				if currentDayName == "Friday" and currentHour == 20 and currentMinute <= 10 then
+					return true
+				else
+					return false
+				end
+			else
+				return false
+			end
+		end
+		
+		-- 启动帝国战争事件
+		function start_war_event()
+			if game.get_event_flag("war_opened") == 0 then
+				game.set_event_flag("war_opened", 1)
+				server_timer("war_close", 3600)
+				-- 来自 event_war.quest
+				game.set_event_flag("birodalmi_war", 1) -- 启动帝国战争
+				game.set_event_flag("birodalmi_war_win", 0) -- 设置胜利帝国
+				game.set_event_flag("birodalmi_war_los", 1) -- 失败方是否可以留下奖励
+				game.set_event_flag("birodalmi_war_lvl", 75) -- 最低等级要求
+				game.set_event_flag("birodalmi_war_max", 50) -- 每个帝国的最大参与人数
+				game.set_event_flag("birodalmi_war_a_n", 0) -- 红方参与人数
+				game.set_event_flag("birodalmi_war_b_n", 0) -- 黄方参与人数
+				game.set_event_flag("birodalmi_war_c_n", 0) -- 蓝方参与人数
+				game.set_event_flag("birodalmi_war_kill", 50) -- 获胜所需的击杀数
+				game.set_event_flag("birodalmi_war_shin", 0) -- 红方击杀数
+				game.set_event_flag("birodalmi_war_chun", 0) -- 黄方击杀数
+				game.set_event_flag("birodalmi_war_jinn", 0) -- 蓝方击杀数
+				notice_all("~*~*帝国战争开始了!*~*~")
+				notice_all("与战斗法官对话以加入！")
+				notice_all("加入最低等级：75")
+				notice_all("每个帝国最大参与人数：50")
+				notice_all("每个帝国获胜所需击杀数：50")
+				notice_all("失败的帝国可以留下奖励。")
+			end
+		end
+		
+		-- 玩家登录时检查是否可以启动帝国战争
+		when login begin
+			if events_automation.is_start_war_event() then
+				events_automation.start_war_event()
+			else
+				loop_timer("check_events_war", 60)
+			end
+		end
+		
+		-- 定时检查是否可以启动帝国战争
+		when check_events_war.timer begin
+			if events_automation.is_start_war_event() then
+				events_automation.start_war_event()
+			end
+		end
+		
+		-- 设置帝国战争结束定时器
+		when war_close.server_timer begin
+			game.set_event_flag("war_opened", 0)
+		end
+		
+		-- GM命令：重置事件标志和定时器
+		-- 只有在没有等待 `war_close.server_timer` 时才需要此命令
+		when 9012.chat."自动化：修复事件标志" with pc.is_gm() and pc.get_map_index() == 201 begin 
+			say_title("修复事件标志:")
+			say("")
+			say_reward("是否重置事件标志和定时器？")
+			say("")
+			local sx = select("是","否")
+			if sx == 2 then
+				return
+			else
+				say_title("修复事件标志:")
+				say("")
+				say_reward("事件标志和定时器已重置。")
+				say("")
+				clear_server_timer("war_close")
+				game.set_event_flag("war_opened", 0)
+			end
+		end
+	end
+end
