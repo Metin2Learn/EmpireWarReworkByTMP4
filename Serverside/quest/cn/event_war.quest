@@ -153,13 +153,256 @@ quest event_war begin
 						say("")
 						say_reward("获得胜利需要多少击杀数？")
 						local requiredKill = input()
-						if requiredKill == "" or not tonumber(requiredKill) then
-							requiredKill = 30
+						if requiredKill == "" or not tonumber(requiredKill) or requiredKill == 0 then
+							requiredKill = 25
 						end
-						event_war.war_start(1, 1, tonumber(minLvlToJoin), tonumber(maxAttender), tonumber(requiredKill))
+						say_title("帝国战争:")
+                        say("")
+                        say_reward("失败的帝国可以保留奖励吗？")
+                        say_reward("最终能得到奖励吗？")
+                        say("")
+                        local looserReward = 0
+                        local s2 = select("是", "否")
+                        if s2 == 1 then looserReward = 1 end
+                        if s2 == 2 then looserReward = 0 end
+                        say_title("帝国战争：")
+                        say("")
+                        say_reward("最低等级："..minLvlToJoin)
+                        say_reward("每个帝国最大参与人数："..maxAttender)
+                        say_reward("获胜所需击杀数："..requiredKill)
+                        if looserReward == 1 then
+                            say_reward("失败方奖励：是")
+                        else
+                            say_reward("失败方奖励：否")
+                        end
+                        say("")
+                        say("一切都对吗？")
+                        say("")
+                        local s2 = select("是的，开始战争", "不，重新尝试")
+                        if s2 == 2 then
+                            send_letter("GM: 帝国战争")
+                            return
+                        else
+                            notice_all("~*~*帝国战争已经开始!*~*~")
+                            notice_all("与战斗法官交谈以加入！")
+                            notice_all("加入的最低等级："..minLvlToJoin)
+                            notice_all("每个帝国最大参与人数："..maxAttender)
+                            notice_all("每个帝国获胜所需击杀数："..requiredKill)
+                            if looserReward == 1 then
+                                notice_all("失败的帝国可以保留奖励。")
+                            end
+                            event_war.war_start(1, looserReward, minLvlToJoin, maxAttender, requiredKill)
+                        end
+                        send_letter("GM: 帝国战争")
 					end
+				else
+                    local pont = event_war.war_required_kill()
+                    local shin = event_war.war_red_kill()
+                    local chun = event_war.war_yellow_kill()
+                    local jinn = event_war.war_blue_kill()
+                    say_title("帝国战争：")
+                    say("")
+                    say("所需积分："..pont)
+                    say("")
+                    say_reward("神兽："..shin)
+                    say_reward("春晓："..chun)
+                    say_reward("神诺："..jinn)
+                    say("")
+                    say("战争正在进行，是否停止？")
+                    say("")
+                    local sx = select("是", "否")
+                    if sx == 2 then
+                        send_letter("GM: 帝国战争")
+                        return
+                    else
+                        event_war.war_flags_nullaz()
+                        syschat("帝国战争已停止。")
+                    end
+                    send_letter("GM: 帝国战争")
+
 				end
-			end
+            elseif pc.get_map_index() == event_war.war_settings().war_map_index and event_war.is_war_running() then
+                local pont = event_war.war_required_kill()
+                local shin = event_war.war_red_kill()
+                local chun = event_war.war_yellow_kill()
+                local jinn = event_war.war_blue_kill()
+                say_title("帝国战争：")
+                say("")
+                say("所需积分："..pont)
+                say("")
+                say_reward("神兽："..shin)
+                say_reward("春晓："..chun)
+                say_reward("神诺："..jinn)
+                say("")
+                select(locale.confirm)
+                send_letter("帝国战争")
+            else
+                say_title("帝国战争：")
+                say("")
+                say_reward("帝国战争已结束。")
+                say_reward("是否传送到村庄？")
+                say("")
+                local s = select("是", "否")
+                if s == 2 then
+                    send_letter("帝国战争")
+                    return
+                else
+                    warp_to_village()
+                end
+            end
+
 		end
-	end
-end
+        when 11001.chat."帝国战争" or 11003.chat."帝国战争" or 11005.chat."帝国战争" begin
+            if event_war.is_war_running() then
+                local minLvlToJoin = event_war.war_min_level()
+                if pc.get_level() < tonumber(minLvlToJoin) then
+                    say_title(mob_name(npc.get_race())..":")
+                    say("")
+                    say_reward("您的等级太低！")
+                    say_reward("所需等级："..minLvlToJoin)
+                    say("")
+                    return
+                else
+                    say_title(mob_name(npc.get_race())..":")
+                    say("")
+                    say("您想加入帝国战争吗？")
+                    say("并为您的帝国而战吗？")
+                    say("")
+                    local s = select("是", "否")
+                    if s == 2 then
+                        return
+                    else
+                        if pc.is_gm() then
+                            pc.warp(event_war.war_settings().gm_cords.x, event_war.war_settings().gm_cords.y)
+                        else
+                            local playerEmpire = pc.get_empire()
+                            local attenders = 0
+                            if playerEmpire == 1 then
+                                attenders = event_war.war_red_attender()
+                            elseif playerEmpire == 2 then
+                                attenders = event_war.war_yellow_attender()
+                            else
+                                attenders = event_war.war_blue_attender()
+                            end
+                            local maxAttenders = event_war.war_max_attender()
+                            if tonumber(attenders) >= tonumber(maxAttenders) then
+                                say_title(mob_name(npc.get_race())..":")
+                                say("")
+                                say("抱歉，您所在帝国最多只能有 "..maxAttenders.." 人参加，您来晚了。")
+                                say("")
+                                return
+                            else
+                                event_war.war_set_attender(playerEmpire)
+                                if playerEmpire == 1 then
+                                    pc.warp(event_war.war_settings().a_cords.x, event_war.war_settings().a_cords.y)
+                                elseif playerEmpire == 2 then
+                                    pc.warp(event_war.war_settings().b_cords.x, event_war.war_settings().b_cords.y)
+                                else
+                                    pc.warp(event_war.war_settings().c_cords.x, event_war.war_settings().c_cords.y)
+                                end
+                            end
+                        end
+                    end
+                end
+            else
+                say_title(mob_name(npc.get_race())..":")
+                say("")
+                say_reward("当前没有帝国战争。")
+                say_reward("帝国战争每周五20:00开启。")
+                say("")
+            end
+        end
+        
+        when login with pc.get_map_index() == event_war.war_settings().war_map_index begin
+            if event_war.is_war_running() then
+                loop_timer("birodalmi_war_t", 3)
+                syschat("代表您的帝国参加战斗！")
+            else
+                if pc.is_gm() then
+                    syschat("您是GM，您现在可以留在这里。")
+                else
+                    warp_to_village()
+                end
+            end
+        end
+        
+        when birodalmi_war_t.timer begin
+            if event_war.is_war_running() then
+                if pc.gethp() < 0 and pc.getqf("birodalmi_war_last_port") <= get_time() then
+                    pc.setqf("birodalmi_war_last_port", get_time() + 10)
+                    timer("birodalmi_war_hp", 3) -- 这是为了确保计算击杀数
+                end
+            end
+            if event_war.war_winner() > 0 then
+                if event_war.war_winner() != pc.get_empire() and not pc.is_gm() then
+                    syschat("您的帝国失败了，您将被传送出去。")
+                    warp_to_village()
+                else
+                    cleartimer("birodalmi_war_t")
+                end
+            end
+        end
+        
+        when birodalmi_war_hp.timer begin
+            if event_war.is_war_running() then
+                local playerEmpire = pc.get_empire()
+                if playerEmpire == 1 then
+                    pc.warp(event_war.war_settings().a_cords.x, event_war.war_settings().a_cords.y)
+                elseif playerEmpire == 2 then
+                    pc.warp(event_war.war_settings().b_cords.x, event_war.war_settings().b_cords.y)
+                else
+                    pc.warp(event_war.war_settings().c_cords.x, event_war.war_settings().c_cords.y)
+                end
+            end
+        end
+        
+        when kill with npc.is_pc() and pc.get_map_index() == event_war.war_settings().war_map_index begin
+            if event_war.is_war_running() then
+                local playerEmpire = pc.get_empire()
+                if npc.get_empire() == playerEmpire then
+                    syschat("帝国战争：您背叛了您的帝国，您将被传送出去。")
+                    warp_to_village()
+                else
+                    event_war.war_set_kill(playerEmpire)
+                    timer("birodalmi_war_check_win", 1) -- 设置一个小延迟，因为事件标志的变化不会立即被感知
+                end
+            else
+                -- 如果在事件结束时有人想捣乱，将被传送出去
+                pc.setqf("not_allowed_kill", pc.getqf("not_allowed_kill") + 1)
+                if pc.getqf("not_allowed_kill") >= 2 then
+                    pc.setqf("not_allowed_kill", 0)
+                    syschat("帝国战争：我告诉过你，再见！")
+                    warp_to_village()
+                elseif pc.getqf("not_allowed_kill") >= 1 then
+                    syschat("帝国战争：再杀一次您就会被传送出去！")
+                end
+            end
+        end
+        
+        when birodalmi_war_check_win.timer begin
+            if event_war.is_war_running() then
+                local playerEmpire = pc.get_empire()
+                local requiredKill = event_war.war_required_kill()
+                local currentKill = event_war.war_current_kill(playerEmpire)
+                if tonumber(currentKill) >= tonumber(requiredKill) then
+                    event_war.war_flags_nullaz()
+                    kill_all_in_map(event_war.war_settings().war_map_index)
+                    if playerEmpire == 1 then
+                        notice_all("神兽赢得了帝国战争！")
+                    elseif playerEmpire == 2 then
+                        notice_all("春晓赢得了帝国战争！")
+                    else
+                        notice_all("神诺赢得了帝国战争！")
+                    end
+                    if event_war.is_looser_reward() then
+                        notice_all("失败的帝国可以保留奖励。")
+                        event_war.war_set_winner(0)
+                    else
+                        event_war.war_set_winner(playerEmpire)
+                    end
+                    regen_in_map(event_war.war_settings().war_map_index, "data/dungeon/event_birodalmi_war.txt")
+                else
+                    syschat("您帝国的得分："..requiredKill.." / "..currentKill)
+                end
+            end
+        end
