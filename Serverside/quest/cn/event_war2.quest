@@ -1,407 +1,408 @@
 ------------------------
--- Empire War By TMP4 --
+-- ğ¨??? By TMP4 --
 ------------------------
 quest event_war begin
 	state start begin
 		function war_settings()
 			return
 			{
-				["a_cords"]={["x"] = 1342700, ["y"]= 33800,},
-				["b_cords"] = { ["x"] = 1393000, ["y"] = 33900, },
-				["c_cords"] = { ["x"] = 1368000, ["y"] = 66300,},
-				["gm_cords"] = { ["x"] = 1367600, ["y"] = 38200, },
-				["war_map_index"] = 201
+				["a_cords"]={["x"] = 1342700, ["y"]= 33800,}, -- ?Û°ñ¦?
+				["b_cords"] = { ["x"] = 1393000, ["y"] = 33900, }, -- ?Û°ñ¦?
+				["c_cords"] = { ["x"] = 1368000, ["y"] = 66300,}, -- ?Û°ñ¦?
+				["gm_cords"] = { ["x"] = 1367600, ["y"] = 38200, }, -- GMñ¦?
+				["war_map_index"] = 201 -- ??ò¢?ßãìÚ
 			}
 		end
 		function war_start(war_state, looser_reward, min_level, max_attender, required_kill)
-			game.set_event_flag("birodalmi_war", war_state) -- Birodalmi war fõ kapcsoló
-			game.set_event_flag("birodalmi_war_win", 0) -- Nyertes birodalom
-			game.set_event_flag("birodalmi_war_los", looser_reward) -- Bent maradhatnak-e a vesztesek
-			game.set_event_flag("birodalmi_war_lvl", min_level) -- Minimum szint
-			game.set_event_flag("birodalmi_war_max", max_attender) -- Max résztvevõ / birodalom
-			game.set_event_flag("birodalmi_war_a_n", 0) -- Piros résztvevõk
-			game.set_event_flag("birodalmi_war_b_n", 0) -- Sárga résztvevõk
-			game.set_event_flag("birodalmi_war_c_n", 0) -- Kék résztvevõk
-			game.set_event_flag("birodalmi_war_kill", required_kill) -- Szükséges kill a nyeréshez
-			game.set_event_flag("birodalmi_war_shin", 0) -- Piros kill számláló
-			game.set_event_flag("birodalmi_war_chun", 0) -- Sárga kill számláló
-			game.set_event_flag("birodalmi_war_jinn", 0) -- Kék kill számláló
+			game.set_event_flag("birodalmi_war", war_state) -- ??ğ¨???
+			game.set_event_flag("birodalmi_war_win", 0) -- ?öÇ?Ê«ğ¨?
+			game.set_event_flag("birodalmi_war_los", looser_reward) -- ã÷?ğ¨?ãÀÜúÊ¦ì¤×ºù»??
+			game.set_event_flag("birodalmi_war_lvl", min_level) -- õÌî¸Ôõ?
+			game.set_event_flag("birodalmi_war_max", max_attender) -- Øß?ğ¨?îÜõÌÓŞ??ìÑ?
+			game.set_event_flag("birodalmi_war_a_n", 0) -- ?Û°??ìÑ?
+			game.set_event_flag("birodalmi_war_b_n", 0) -- ?Û°??ìÑ?
+			game.set_event_flag("birodalmi_war_c_n", 0) -- ?Û°??ìÑ?
+			game.set_event_flag("birodalmi_war_kill", required_kill) -- ?××á¶âÍîÜ???
+			game.set_event_flag("birodalmi_war_shin", 0) -- ?Û°???
+			game.set_event_flag("birodalmi_war_chun", 0) -- ?Û°???
+			game.set_event_flag("birodalmi_war_jinn", 0) -- ?Û°???
 		end
 		
 		function war_winner()
-			return game.get_event_flag("birodalmi_war_win")
+			return game.get_event_flag("birodalmi_war_win") -- ?ö¢??Û°
 		end
 		function war_set_winner(empireNum)
-			game.set_event_flag("birodalmi_war_win", empireNum)
+			game.set_event_flag("birodalmi_war_win", empireNum) -- ?öÇ??Û°
 		end
 		function war_min_level()
-			return game.get_event_flag("birodalmi_war_lvl")
+			return game.get_event_flag("birodalmi_war_lvl") -- ?ö¢õÌá³Ôõ?
 		end
 		function is_war_running()
 			if game.get_event_flag("birodalmi_war") > 0 then
-				return true
+				return true -- åıÍı??ïáî¤?ú¼ñé£¬Ú÷üŞ?
 			else
-				return false
+				return false -- Üú?Ú÷üŞÊ£
 			end
 		end
 		function is_looser_reward()
 			if game.get_event_flag("birodalmi_war_los") > 0 then
-				return true
+				return true -- åıÍıã÷?íºÊ¦ì¤?Ôğ??£¬Ú÷üŞ?
 			else
-				return false
+				return false -- Üú?Ú÷üŞÊ£
 			end
 		end
 		function war_max_attender()
-			return game.get_event_flag("birodalmi_war_max")
+			return game.get_event_flag("birodalmi_war_max") -- ?ö¢Øß?ğ¨?îÜõÌÓŞ??ìÑ?
 		end
 		function war_red_attender()
-			return game.get_event_flag("birodalmi_war_a_n")
+			return game.get_event_flag("birodalmi_war_a_n") -- ?ö¢?Û°??ìÑ?
 		end
 		function war_yellow_attender()
-			return game.get_event_flag("birodalmi_war_b_n")
+			return game.get_event_flag("birodalmi_war_b_n") -- ?ö¢?Û°??ìÑ?
 		end
 		function war_blue_attender()
-			return game.get_event_flag("birodalmi_war_c_n")
+			return game.get_event_flag("birodalmi_war_c_n") -- ?ö¢?Û°??ìÑ?
 		end
 		function war_set_attender(empireNum)
 			if empireNum == 1 then
-				game.set_event_flag("birodalmi_war_a_n", event_war.war_red_attender() + 1)
+				game.set_event_flag("birodalmi_war_a_n", event_war.war_red_attender() + 1) -- ñòÊ¥?Û°??ìÑ?
 			elseif empireNum == 2 then
-				game.set_event_flag("birodalmi_war_b_n", event_war.war_yellow_attender() + 1)
+				game.set_event_flag("birodalmi_war_b_n", event_war.war_yellow_attender() + 1) -- ñòÊ¥?Û°??ìÑ?
 			else
-				game.set_event_flag("birodalmi_war_c_n", event_war.war_blue_attender() + 1)
+				game.set_event_flag("birodalmi_war_c_n", event_war.war_blue_attender() + 1) -- ñòÊ¥?Û°??ìÑ?
 			end
 		end
 		function war_required_kill()
-			return game.get_event_flag("birodalmi_war_kill")
+			return game.get_event_flag("birodalmi_war_kill") -- ?ö¢?××á¶âÍîÜ???
 		end
 		function war_red_kill()
-			return game.get_event_flag("birodalmi_war_shin")
+			return game.get_event_flag("birodalmi_war_shin") -- ?ö¢?Û°???
 		end
 		function war_yellow_kill()
-			return game.get_event_flag("birodalmi_war_chun")
+			return game.get_event_flag("birodalmi_war_chun") -- ?ö¢?Û°???
 		end
 		function war_blue_kill()
-			return game.get_event_flag("birodalmi_war_jinn")
+			return game.get_event_flag("birodalmi_war_jinn") -- ?ö¢?Û°???
 		end
 		function war_set_kill(empireNum)
 			if empireNum == 1 then
-				game.set_event_flag("birodalmi_war_shin", event_war.war_red_kill() + 1)
+				game.set_event_flag("birodalmi_war_shin", event_war.war_red_kill() + 1) -- ?öÇ?Û°???
 			elseif empireNum == 2 then
-				game.set_event_flag("birodalmi_war_chun", event_war.war_yellow_kill() + 1)
+				game.set_event_flag("birodalmi_war_chun", event_war.war_yellow_kill() + 1) -- ?öÇ?Û°???
 			else
-				game.set_event_flag("birodalmi_war_jinn", event_war.war_blue_kill() + 1)
+				game.set_event_flag("birodalmi_war_jinn", event_war.war_blue_kill() + 1) -- ?öÇ?Û°???
 			end
 		end
 		function war_current_kill(empireNum)
 			if empireNum == 1 then
-				return game.get_event_flag("birodalmi_war_shin")
+				return game.get_event_flag("birodalmi_war_shin") -- ?ö¢?Û°?îñ???
 			elseif empireNum == 2 then
-				return game.get_event_flag("birodalmi_war_chun")
+				return game.get_event_flag("birodalmi_war_chun") -- ?ö¢?Û°?îñ???
 			else
-				return game.get_event_flag("birodalmi_war_jinn")
+				return game.get_event_flag("birodalmi_war_jinn") -- ?ö¢?Û°?îñ???
 			end
 		end
 		function war_flags_nullaz()
-			game.set_event_flag("birodalmi_war", 0) -- Birodalmi war fõ kapcsoló
-			game.set_event_flag("birodalmi_war_win", 0) -- Nyertes birodalom
-			game.set_event_flag("birodalmi_war_los", 0) -- Bent maradhatnak-e a vesztesek
-			game.set_event_flag("birodalmi_war_lvl", 0) -- Minimum szint
-			game.set_event_flag("birodalmi_war_max", 0) -- Max résztvevõ / birodalom
-			game.set_event_flag("birodalmi_war_a_n", 0) -- Piros résztvevõk
-			game.set_event_flag("birodalmi_war_b_n", 0) -- Sárga résztvevõk
-			game.set_event_flag("birodalmi_war_c_n", 0) -- Kék résztvevõk
-			game.set_event_flag("birodalmi_war_kill", 0) -- Szükséges kill a nyeréshez
-			game.set_event_flag("birodalmi_war_shin", 0) -- Piros kill számláló
-			game.set_event_flag("birodalmi_war_chun", 0) -- Sárga kill számláló
-			game.set_event_flag("birodalmi_war_jinn", 0) -- Kék kill számlál
+			game.set_event_flag("birodalmi_war", 0) -- ñìöÇğ¨???
+			game.set_event_flag("birodalmi_war_win", 0) -- ñìöÇ??Û°
+			game.set_event_flag("birodalmi_war_los", 0) -- ñìöÇã÷?íº??
+			game.set_event_flag("birodalmi_war_lvl", 0) -- ñìöÇõÌî¸Ôõ?
+			game.set_event_flag("birodalmi_war_max", 0) -- ñìöÇõÌÓŞ??ìÑ?
+			game.set_event_flag("birodalmi_war_a_n", 0) -- ñìöÇ?Û°??ìÑ?
+			game.set_event_flag("birodalmi_war_b_n", 0) -- ñìöÇ?Û°??ìÑ?
+			game.set_event_flag("birodalmi_war_c_n", 0) -- ñìöÇ?Û°??ìÑ?
+			game.set_event_flag("birodalmi_war_kill", 0) -- ñìöÇ?××á¶âÍ???
+			game.set_event_flag("birodalmi_war_shin", 0) -- ñìöÇ?Û°???
+			game.set_event_flag("birodalmi_war_chun", 0) -- ñìöÇ?Û°???
+			game.set_event_flag("birodalmi_war_jinn", 0) -- ñìöÇ?Û°???
 		end
 		when letter begin
 			if pc.is_gm() then
-				send_letter("GM: Empire War")
+				send_letter("GM: ğ¨???")
 			elseif pc.get_map_index() == event_war.war_settings().war_map_index and event_war.is_war_running() then
-				send_letter("Empire War")
+				send_letter("ğ¨???")
 			end
 		end
 		when button or info begin
 			if pc.is_gm() then
 				if not event_war.is_war_running() then
-					say_title("Empire War:")
+					say_title("ğ¨???:")
 					say("")
-					say_reward("Currently the Empire War")
-					say_reward("not running, do you want to start?")
+					say_reward("?îñğ¨???Ú±??£¬ãÀÜúé©?ã·£¿")
 					say("")
-					local s1 = select ("Yes","No")
+					local s1 = select ("ãÀ","Üú")
 					if s1 == 2 then
-						send_letter("GM: Empire War")
+						send_letter("GM: ğ¨???")
 						return
 					else
-						say_title("Empire War:")
+						say_title("ğ¨???:")
 						say("")
-						say_reward("What should be the minimum level?")
+						say_reward("õÌî¸Ôõ?ãÀÒıá´£¿")
 						local minLvlToJoin = input()
 						if minLvlToJoin == "" or not tonumber(minLvlToJoin) then
 							minLvlToJoin = 75
 						end
-						say_title("Empire War:")
+						say_title("ğ¨???:")
 						say("")
-						say_reward("What should be the maximum number")
-						say_reward("of participants per empire?")
+						say_reward("Øß?ğ¨?õÌÒıÊ¦ì¤êóÒıá´??íº£¿")
 						local maxAttender = input()
-						if maxAttender == "" or not tonumber(maxAttender) or maxAttender == 0 then
-							maxAttender = 25
+						if maxAttender == "" or not tonumber(maxAttender) or maxAttender < 5 then
+							maxAttender = 50
 						end
-						say_title("Empire War:")
+						say_title("ğ¨???:")
 						say("")
-						say_reward("How much should be the ")
-						say_reward("required kill to win?")
+						say_reward("?Ôğ?××âÍé©Òıá´???£¿")
 						local requiredKill = input()
 						if requiredKill == "" or not tonumber(requiredKill) or requiredKill == 0 then
 							requiredKill = 25
 						end
-						say_title("Empire War:")
-						say("")
-						say_reward("Can losing empires stay for")
-						say_reward("the reward in the end?")
-						say("")
-						local looserReward = 0
-						local s2 = select("Yes","No")
-						if s2 == 1 then looserReward = 1 end
-						if s2 == 2 then looserReward = 0 end
-						say_title("Empire War:")
-						say("")
-						say_reward("Minimum level: "..minLvlToJoin)
-						say_reward("Max participant / empire: "..maxAttender)
-						say_reward("Kill required to win: "..requiredKill)
-						if looserReward == 1 then
-							say_reward("Looser Reward: Yes")
-						else
-							say_reward("Looser Reward: No")
-						end
-						say("")
-						say("Is everything right?")
-						say("")
-						local s2 = select("Yes, start the war", "No, try again")
-						if s2 == 2 then
-							send_letter("GM: Empire War")
-							return
-						else
-							notice_all("~*~*The Empire War has started!*~*~")
-							notice_all("Speak with Battle bailiff to join!")
-							notice_all("Minimum level to join: "..minLvlToJoin)
-							notice_all("Maximum attender / empire: "..maxAttender)
-							notice_all("Required kill / empire to win: "..requiredKill)
-							if looserReward == 1 then
-								notice_all("The looser empires can stay for the reward.")
-							end
-							event_war.war_start(1, looserReward, minLvlToJoin, maxAttender, requiredKill)
-						end
-						send_letter("GM: Empire War")
+						say_title("ğ¨???:")
+                        say("")
+                        say_reward("ã÷?îÜğ¨?Ê¦ì¤ÜÁ×º???£¿")
+                        say_reward("õÌ?ÒöÔğÓğ???£¿")
+                        say("")
+                        local looserReward = 0
+                        local s2 = select("ãÀ", "Üú")
+                        if s2 == 1 then looserReward = 1 end
+                        if s2 == 2 then looserReward = 0 end
+                        say_title("ğ¨???£º")
+                        say("")
+                        say_reward("õÌî¸Ôõ?£º"..minLvlToJoin)
+                        say_reward("Øß?ğ¨?õÌÓŞ??ìÑ?£º"..maxAttender)
+                        say_reward("??á¶âÍ???£º"..requiredKill)
+                        if looserReward == 1 then
+                            say_reward("ã÷?Û°??£ºãÀ")
+                        else
+                            say_reward("ã÷?Û°??£ºÜú")
+                        end
+                        say("")
+                        say("ìéï·Ô´??£¿")
+                        say("")
+                        local s2 = select("ãÀîÜ£¬?ã·??", "Üô£¬ñìãæ??")
+                        if s2 == 2 then
+                            send_letter("GM: ğ¨???")
+                            return
+                        else
+                            notice_all("~*~*ğ¨???ì«??ã·!*~*~")
+                            notice_all("??ÔàÛöÎ¯Îß?ì¤Ê¥ìı£¡")
+                            notice_all("Ê¥ìıîÜõÌî¸Ôõ?£º"..minLvlToJoin)
+                            notice_all("Øß?ğ¨?õÌÓŞ??ìÑ?£º"..maxAttender)
+                            notice_all("Øß?ğ¨???á¶âÍ???£º"..requiredKill)
+                            if looserReward == 1 then
+                                notice_all("ã÷?îÜğ¨?Ê¦ì¤ÜÁ×º??¡£")
+                            end
+                            event_war.war_start(1, looserReward, minLvlToJoin, maxAttender, requiredKill)
+                        end
+                        send_letter("GM: ğ¨???")
 					end
 				else
-					local pont = event_war.war_required_kill()
-					local shin = event_war.war_red_kill()
-					local chun = event_war.war_yellow_kill()
-					local jinn = event_war.war_blue_kill()
-					say_title("Empire War:")
-					say("")
-					say("Required point: "..pont)
-					say("")
-					say_reward("Shinsoo: "..shin)
-					say_reward("Chunjo: "..chun)
-					say_reward("Jinno: "..jinn)
-					say("")
-					say("The war is active, should I stop it?")
-					say("")
-					local sx = select ("Yes","No")
-					if sx == 2 then
-						send_letter("GM: Empire War")
-						return
-					else
-						event_war.war_flags_nullaz()
-						syschat("Empire War stopped.")
-					end
-					send_letter("GM: Empire War")
+                    local pont = event_war.war_required_kill()
+                    local shin = event_war.war_red_kill()
+                    local chun = event_war.war_yellow_kill()
+                    local jinn = event_war.war_blue_kill()
+                    say_title("ğ¨???£º")
+                    say("")
+                    say("á¶âÍ?İÂ£º"..pont)
+                    say("")
+                    say_reward("ãê?£º"..shin)
+                    say_reward("õğ?£º"..chun)
+                    say_reward("ãê?£º"..jinn)
+                    say("")
+                    say("??ïáî¤?ú¼£¬ãÀÜúïÎò­£¿")
+                    say("")
+                    local sx = select("ãÀ", "Üú")
+                    if sx == 2 then
+                        send_letter("GM: ğ¨???")
+                        return
+                    else
+                        event_war.war_flags_nullaz()
+                        syschat("ğ¨???ì«ïÎò­¡£")
+                    end
+                    send_letter("GM: ğ¨???")
+
 				end
-			elseif pc.get_map_index() == event_war.war_settings().war_map_index and event_war.is_war_running() then
-				local pont = event_war.war_required_kill()
-				local shin = event_war.war_red_kill()
-				local chun = event_war.war_yellow_kill()
-				local jinn = event_war.war_blue_kill()
-				say_title("Empire War:")
-				say("")
-				say("Required point: "..pont)
-				say("")
-				say_reward("Shinsoo: "..shin)
-				say_reward("Chunjo: "..chun)
-				say_reward("Jinno: "..jinn)
-				say("")
-				select(locale.confirm)
-				send_letter("Empire War")
-			else
-				say_title("Empire War:")
-				say("")
-				say_reward("The Empire War ended.")
-				say_reward("Teleport to village?")
-				say("")
-				local s = select("Yes","No")
-				if s == 2 then
-					send_letter("Empire War")
-					return
-				else
-					warp_to_village()
-				end
-			end
+            elseif pc.get_map_index() == event_war.war_settings().war_map_index and event_war.is_war_running() then
+                local pont = event_war.war_required_kill()
+                local shin = event_war.war_red_kill()
+                local chun = event_war.war_yellow_kill()
+                local jinn = event_war.war_blue_kill()
+                say_title("ğ¨???£º")
+                say("")
+                say("á¶âÍ?İÂ£º"..pont)
+                say("")
+                say_reward("ãê?£º"..shin)
+                say_reward("õğ?£º"..chun)
+                say_reward("ãê?£º"..jinn)
+                say("")
+                select(locale.confirm)
+                send_letter("ğ¨???")
+            else
+                say_title("ğ¨???£º")
+                say("")
+                say_reward("ğ¨???ì«?áÖ¡£")
+                say_reward("ãÀÜú?áêÓğõ½íä£¿")
+                say("")
+                local s = select("ãÀ", "Üú")
+                if s == 2 then
+                    send_letter("ğ¨???")
+                    return
+                else
+                    warp_to_village()
+                end
+            end
+
 		end
-		when 11001.chat."Empire War" or 11003.chat."Empire War" or 11005.chat."Empire War" begin
-			if event_war.is_war_running() then
-				local minLvlToJoin = event_war.war_min_level()
-				if pc.get_level() < tonumber(minLvlToJoin) then
-					say_title(mob_name(npc.get_race())..":")
-					say("")
-					say_reward("You level is too low!")
-					say_reward("Required level: "..minLvlToJoin)
-					say("")
-					return
-				else
-					say_title(mob_name(npc.get_race())..":")
-					say("")
-					say("Do you want to join to the Empire War")
-					say("and fight for your Empire?")
-					say("")
-					local s = select("Yes", "No")
-					if s == 2 then
-						return
-					else
-						if pc.is_gm() then
-							pc.warp(event_war.war_settings().gm_cords.x,event_war.war_settings().gm_cords.y)
-						else
-							local playerEmpire = pc.get_empire()
-							local attenders = 0
-							if playerEmpire == 1 then
-								attenders = event_war.war_red_attender()
-							elseif playerEmpire == 2 then
-								attenders = event_war.war_yellow_attender()
-							else
-								attenders = event_war.war_blue_attender()
-							end
-							local maxAttenders = event_war.war_max_attender()
-							if tonumber(attenders) >= tonumber(maxAttenders) then
-								say_title(mob_name(npc.get_race())..":")
-								say("")
-								say("I'm sorry but max "..maxAttenders.." people")
-								say("can enter from your empire, your're late.")
-								say("")
-								return
-							else
-								event_war.war_set_attender(playerEmpire)
-								if playerEmpire == 1 then
-									pc.warp(event_war.war_settings().a_cords.x,event_war.war_settings().a_cords.y)
-								elseif playerEmpire == 2 then
-									pc.warp(event_war.war_settings().b_cords.x,event_war.war_settings().b_cords.y)
-								else
-									pc.warp(event_war.war_settings().c_cords.x,event_war.war_settings().c_cords.y)
-								end
-							end
-						end
-					end
-				end
-			else
-				say_title(mob_name(npc.get_race())..":")
-				say("")
-				say_reward("Currently there are no Empire War.")
-				say_reward("Empire War run on every Friday 20:00.")
-				say("")
-			end
-		end
-		when login with pc.get_map_index() == event_war.war_settings().war_map_index begin
-			if event_war.is_war_running() then
-				loop_timer("birodalmi_war_t", 3)
-				syschat("Represent your empire and take part in the battle!")
-			else
-				if pc.is_gm() then
-					syschat("You are GM, you can stay here now.")
-				else
-					warp_to_village()
-				end
-			end
-		end
-		when birodalmi_war_t.timer begin
-			if event_war.is_war_running() then
-				if pc.gethp() < 0 and pc.getqf("birodalmi_war_last_port") <= get_time() then
-					pc.setqf("birodalmi_war_last_port", get_time() + 10)
-					timer("birodalmi_war_hp", 3) -- idõ adása hogy biztos számolja a kill-t
-				end
-			end
-			if event_war.war_winner() > 0 then
-				if event_war.war_winner() != pc.get_empire() and not pc.is_gm() then
-					syschat("Your empire lost, you will be ported out.")
-					warp_to_village()
-				else
-					cleartimer("birodalmi_war_t")
-				end
-			end
-		end
-		when birodalmi_war_hp.timer begin
-			if event_war.is_war_running() then
-				local playerEmpire = pc.get_empire()
-				if playerEmpire == 1 then
-					pc.warp(event_war.war_settings().a_cords.x,event_war.war_settings().a_cords.y)
-				elseif playerEmpire == 2 then
-					pc.warp(event_war.war_settings().b_cords.x,event_war.war_settings().b_cords.y)
-				else
-					pc.warp(event_war.war_settings().c_cords.x,event_war.war_settings().c_cords.y)
-				end
-			end
-		end
-		when kill with npc.is_pc() and pc.get_map_index() == event_war.war_settings().war_map_index begin
-			if event_war.is_war_running() then
-				local playerEmpire = pc.get_empire()
-				if npc.get_empire() == playerEmpire then
-					syschat("Empire War: you betrayed your empire, you get ported out.")
-					warp_to_village()
-				else
-					event_war.war_set_kill(playerEmpire)
-					timer("birodalmi_war_check_win", 1) -- Azért kell egy kis késés timerrel mert az event flag állítást No érzékeli azonnal...
-				end
-			else
-				-- Event végén ha esetleg valaki rosszalkodni akar, ki lesz portolva.
-				pc.setqf("not_allowed_kill", pc.getqf("not_allowed_kill") + 1)
-				if pc.getqf("not_allowed_kill") >= 2 then
-					pc.setqf("not_allowed_kill", 0)
-					syschat("Empire War: I told you, bye!")
-					warp_to_village()
-				elseif pc.getqf("not_allowed_kill") >= 1 then
-					syschat("Empire War: Kill one more and you get ported out!")
-				end
-			end
-		end
-		when birodalmi_war_check_win.timer begin
-			if event_war.is_war_running() then
-				local playerEmpire = pc.get_empire()
-				local requiredKill = event_war.war_required_kill()
-				local currentKill = event_war.war_current_kill(playerEmpire)
-				if tonumber(currentKill) >= tonumber(requiredKill) then
-					event_war.war_flags_nullaz()
-					kill_all_in_map(event_war.war_settings().war_map_index)
-					if playerEmpire == 1 then
-						notice_all("Shinsoo won the Empire War!")
-					elseif playerEmpire == 2 then
-						notice_all("Chunjo won the Empire War!")
-					else
-						notice_all("Jinno won the Empire War!")
-					end
-					if event_war.is_looser_reward() then
-						notice_all("The looser empires can stay for the reward.")
-						event_war.war_set_winner(0)
-					else
-						event_war.war_set_winner(playerEmpire)
-					end
-					regen_in_map(event_war.war_settings().war_map_index, "data/dungeon/event_birodalmi_war.txt")
-				else
-					syschat("Your empire's score: "..requiredKill.." / "..currentKill)
-				end
-			end
-		end
-	end
-end
+        when 11001.chat."ğ¨???" or 11003.chat."ğ¨???" or 11005.chat."ğ¨???" begin
+            if event_war.is_war_running() then
+                local minLvlToJoin = event_war.war_min_level()
+                if pc.get_level() < tonumber(minLvlToJoin) then
+                    say_title(mob_name(npc.get_race())..":")
+                    say("")
+                    say_reward("?îÜÔõ?÷¼î¸£¡")
+                    say_reward("á¶âÍÔõ?£º"..minLvlToJoin)
+                    say("")
+                    return
+                else
+                    say_title(mob_name(npc.get_race())..":")
+                    say("")
+                    say("?ßÌÊ¥ìığ¨????£¿")
+                    say("???îÜğ¨?ì»??£¿")
+                    say("")
+                    local s = select("ãÀ", "Üú")
+                    if s == 2 then
+                        return
+                    else
+                        if pc.is_gm() then
+                            pc.warp(event_war.war_settings().gm_cords.x, event_war.war_settings().gm_cords.y)
+                        else
+                            local playerEmpire = pc.get_empire()
+                            local attenders = 0
+                            if playerEmpire == 1 then
+                                attenders = event_war.war_red_attender()
+                            elseif playerEmpire == 2 then
+                                attenders = event_war.war_yellow_attender()
+                            else
+                                attenders = event_war.war_blue_attender()
+                            end
+                            local maxAttenders = event_war.war_max_attender()
+                            if tonumber(attenders) >= tonumber(maxAttenders) then
+                                say_title(mob_name(npc.get_race())..":")
+                                say("")
+                                say("øÙ?£¬?á¶î¤ğ¨?õÌÒıñşÒöêó "..maxAttenders.." ìÑ?Ê¥£¬???Öõ¡£")
+                                say("")
+                                return
+                            else
+                                event_war.war_set_attender(playerEmpire)
+                                if playerEmpire == 1 then
+                                    pc.warp(event_war.war_settings().a_cords.x, event_war.war_settings().a_cords.y)
+                                elseif playerEmpire == 2 then
+                                    pc.warp(event_war.war_settings().b_cords.x, event_war.war_settings().b_cords.y)
+                                else
+                                    pc.warp(event_war.war_settings().c_cords.x, event_war.war_settings().c_cords.y)
+                                end
+                            end
+                        end
+                    end
+                end
+            else
+                say_title(mob_name(npc.get_race())..":")
+                say("")
+                say_reward("?îñ?êóğ¨???¡£")
+                say_reward("ğ¨???Øßñ²çé20:00??¡£")
+                say("")
+            end
+        end
+        
+        when login with pc.get_map_index() == event_war.war_settings().war_map_index begin
+            if event_war.is_war_running() then
+                loop_timer("birodalmi_war_t", 3)
+                syschat("ÓÛøú?îÜğ¨??Ê¥?Ôà£¡")
+            else
+                if pc.is_gm() then
+                    syschat("?ãÀGM£¬??î¤Ê¦ì¤×ºî¤?×ì¡£")
+                else
+                    warp_to_village()
+                end
+            end
+        end
+        
+        when birodalmi_war_t.timer begin
+            if event_war.is_war_running() then
+                if pc.gethp() < 0 and pc.getqf("birodalmi_war_last_port") <= get_time() then
+                    pc.setqf("birodalmi_war_last_port", get_time() + 10)
+                    timer("birodalmi_war_hp", 3) -- ?ãÀ?Öõ?ÜÁ?ß©???
+                end
+            end
+            if event_war.war_winner() > 0 then
+                if event_war.war_winner() != pc.get_empire() and not pc.is_gm() then
+                    syschat("?îÜğ¨?ã÷?Öõ£¬??ù¬?áêõóËÛ¡£")
+                    warp_to_village()
+                else
+                    cleartimer("birodalmi_war_t")
+                end
+            end
+        end
+        
+        when birodalmi_war_hp.timer begin
+            if event_war.is_war_running() then
+                local playerEmpire = pc.get_empire()
+                if playerEmpire == 1 then
+                    pc.warp(event_war.war_settings().a_cords.x, event_war.war_settings().a_cords.y)
+                elseif playerEmpire == 2 then
+                    pc.warp(event_war.war_settings().b_cords.x, event_war.war_settings().b_cords.y)
+                else
+                    pc.warp(event_war.war_settings().c_cords.x, event_war.war_settings().c_cords.y)
+                end
+            end
+        end
+        
+        when kill with npc.is_pc() and pc.get_map_index() == event_war.war_settings().war_map_index begin
+            if event_war.is_war_running() then
+                local playerEmpire = pc.get_empire()
+                if npc.get_empire() == playerEmpire then
+                    syschat("ğ¨???£º?ÛÎÚäÖõ?îÜğ¨?£¬??ù¬?áêõóËÛ¡£")
+                    warp_to_village()
+                else
+                    event_war.war_set_kill(playerEmpire)
+                    timer("birodalmi_war_check_win", 1) -- ?öÇìé?á³æÅ?£¬ì×?ŞÀËì?ò¤îÜ?ûùÜô?Ø¡?ù¬Êïò±
+                end
+            else
+                -- åıÍıî¤ŞÀËì?áÖ?êóìÑßÌ??£¬?ù¬?áêõóËÛ
+                pc.setqf("not_allowed_kill", pc.getqf("not_allowed_kill") + 1)
+                if pc.getqf("not_allowed_kill") >= 2 then
+                    pc.setqf("not_allowed_kill", 0)
+                    syschat("ğ¨???£ºä²Í±???£¬î¢?£¡")
+                    warp_to_village()
+                elseif pc.getqf("not_allowed_kill") >= 1 then
+                    syschat("ğ¨???£ºî¢?ìéó­?ö¦?ù¬?áêõóËÛ£¡")
+                end
+            end
+        end
+        
+        when birodalmi_war_check_win.timer begin
+            if event_war.is_war_running() then
+                local playerEmpire = pc.get_empire()
+                local requiredKill = event_war.war_required_kill()
+                local currentKill = event_war.war_current_kill(playerEmpire)
+                if tonumber(currentKill) >= tonumber(requiredKill) then
+                    event_war.war_flags_nullaz()
+                    kill_all_in_map(event_war.war_settings().war_map_index)
+                    if playerEmpire == 1 then
+                        notice_all("ãê??ÔğÖõğ¨???£¡")
+                    elseif playerEmpire == 2 then
+                        notice_all("õğ??ÔğÖõğ¨???£¡")
+                    else
+                        notice_all("ãê??ÔğÖõğ¨???£¡")
+                    end
+                    if event_war.is_looser_reward() then
+                        notice_all("ã÷?îÜğ¨?Ê¦ì¤ÜÁ×º??¡£")
+                        event_war.war_set_winner(0)
+                    else
+                        event_war.war_set_winner(playerEmpire)
+                    end
+                    regen_in_map(event_war.war_settings().war_map_index, "data/dungeon/event_birodalmi_war.txt")
+                else
+                    syschat("?ğ¨?îÜÔğİÂ£º"..requiredKill.." / "..currentKill)
+                end
+            end
+        end
