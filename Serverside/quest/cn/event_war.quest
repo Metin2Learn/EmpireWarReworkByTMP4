@@ -204,9 +204,9 @@ quest event_war begin
                     say("")
                     say("所需积分："..pont)
                     say("")
-                    say_reward("神兽："..shin)
-                    say_reward("春晓："..chun)
-                    say_reward("神诺："..jinn)
+                    say_reward("盛唐国："..shin)
+                    say_reward("秦皇国："..chun)
+                    say_reward("汉武国："..jinn)
                     say("")
                     say("战争正在进行，是否停止？")
                     say("")
@@ -230,9 +230,9 @@ quest event_war begin
                 say("")
                 say("所需积分："..pont)
                 say("")
-                say_reward("神兽："..shin)
-                say_reward("春晓："..chun)
-                say_reward("神诺："..jinn)
+                say_reward("盛唐国："..shin)
+                say_reward("秦皇国："..chun)
+                say_reward("汉武国："..jinn)
                 say("")
                 select(locale.confirm)
                 send_letter("帝国战争")
@@ -388,11 +388,11 @@ quest event_war begin
                     event_war.war_flags_nullaz()
                     kill_all_in_map(event_war.war_settings().war_map_index)
                     if playerEmpire == 1 then
-                        notice_all("神兽赢得了帝国战争！")
+                        notice_all("盛唐国赢得了帝国战争！")
                     elseif playerEmpire == 2 then
-                        notice_all("春晓赢得了帝国战争！")
+                        notice_all("秦皇国赢得了帝国战争！")
                     else
-                        notice_all("神诺赢得了帝国战争！")
+                        notice_all("汉武国赢得了帝国战争！")
                     end
                     if event_war.is_looser_reward() then
                         notice_all("失败的帝国可以保留奖励。")
@@ -406,3 +406,6 @@ quest event_war begin
                 end
             end
         end
+
+	end
+end
